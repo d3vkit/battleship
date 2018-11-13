@@ -3,8 +3,8 @@ require './lib/ship'
 class Cruiser < Ship
   SIZE = 3
 
-  def initialize(start_pos = '', end_pos = '')
-    super(start_pos, end_pos, size: SIZE)
+  def initialize(position = ',')
+    super(position, size: SIZE)
   end
 
   def name

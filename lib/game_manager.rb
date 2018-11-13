@@ -4,15 +4,33 @@ require_relative 'text_manager'
 
 class GameManager
   include Singleton
-
-  attr_accessor :waiting
+  attr_accessor :turn, :players
 
   def initialize
-    @waiting = false
+    @turn = 0
+    @players = []
   end
 
-  def waiting?
-    @waiting
+  def next_turn
+    @turn = determine_next_turn
+  end
+
+  def start_turn
+    # error if no players
+
+    current_player = players[turn]
+    opponent = players[determine_next_turn]
+
+    GameManager.write("${current_player.name} Turn\n")
+    GameManager.write('Your Ships')
+
+    current_player.grid.draw
+
+    GameManager.write('Enemy Ships')
+
+    opponent.grid.draw(fog_of_war: true)
+
+    # current_player.start_turn
   end
 
   def self.set_proc_title
@@ -41,5 +59,15 @@ class GameManager
     write('Thanks For Playing!', color: 'green')
 
     exit(true)
+  end
+
+  def self.bounds
+    { x: 10, y: 10 }
+  end
+
+  private
+
+  def determine_next_turn
+    turn == 1 ? 0 : 1
   end
 end
