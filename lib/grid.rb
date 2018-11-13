@@ -22,12 +22,12 @@ class Grid
 
   def setup
     GameManager.clear_screen
-    valid = false
+    GameManager.instance.waiting = true
 
-    until valid
+    while GameManager.instance.waiting?
       ship = next_ship_needed
 
-      ship ? setup_ship(ship) : valid = true
+      ship ? setup_ship(ship) : GameManager.instance.waiting = false
     end
   end
 
@@ -92,14 +92,13 @@ class Grid
   end
 
   def setup_ship(ship)
-    grid_valid = false
+    GameManager.instance.waiting = true
 
-    until grid_valid
+    while GameManager.instance.waiting?
       ship.setup(draw)
       add_ship(ship)
 
-      grid_valid = valid?
-
+      GameManager.instance.waiting = valid?
       GameManager.clear_screen
 
       next unless errors.any?

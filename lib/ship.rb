@@ -1,4 +1,3 @@
-require_relative 'game'
 require_relative 'game_manager'
 require_relative 'position'
 require_relative 'modules/error_tracking'
@@ -47,22 +46,22 @@ class Ship
   end
 
   def setup(grid_image)
-    ship_valid = false
+    GameManager.instance.waiting = true
 
-    until ship_valid
+    while GameManager.instance.waiting?
       GameManager.write("Enter position for #{name} (#{size} spaces)\n#{grid_image}\n")
 
       @start_pos = GameManager.collect_input('Start Position: ')
       @end_pos = GameManager.collect_input('End Position: ')
 
-      ship_valid = valid?
+      GameManager.instance.waiting = valid?
 
-      if errors.any?
-        GameManager.clear_screen
-        GameManager.write("#{error_message}\n")
+      next unless errors.any?
 
-        clear_errors
-      end
+      GameManager.clear_screen
+      GameManager.write("#{error_message}\n")
+
+      clear_errors
     end
   end
 
