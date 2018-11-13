@@ -1,6 +1,7 @@
 require_relative 'game'
 require_relative 'game_manager'
 require_relative 'modules/error_tracking'
+require_relative 'grid_renderer'
 require_relative 'ship'
 require_relative 'ships/aircraft_carrier'
 require_relative 'ships/battleship'
@@ -12,7 +13,6 @@ class Grid
   include ErrorTracking
   attr_reader :ships
 
-  POS_ARR = ('A'..'J').to_a.freeze
   BOUNDS = { x: 10, y: 10 }.freeze
 
   def initialize
@@ -32,26 +32,7 @@ class Grid
   end
 
   def draw
-    row_border = "\n  |---------------------------------------|\n"
-    str = '   '
-    10.times do |n|
-      str += n == 9 ? (n + 1).to_s : " #{n + 1}  "
-    end
-    str += ' '
-    str += row_border
-
-    @grid.each_with_index do |row, index|
-      str += "#{POS_ARR[index]} |"
-
-      row.each do |column|
-        str += !column.nil? ? column : '   '
-        str += '|'
-      end
-
-      str += row_border
-    end
-
-    str
+    GridRenderer.new(@grid).draw
   end
 
   def ships=(ships)
